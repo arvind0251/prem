@@ -100,51 +100,35 @@ async def is_admin(chat_id: int, user_id: int) -> bool:
         return False
 
 
-@Istu.one.on_update(fl.call_participant(GroupCallParticipant.Action.JOINED))
-@Istu.two.on_update(fl.call_participant(GroupCallParticipant.Action.JOINED))
-@Istu.three.on_update(fl.call_participant(GroupCallParticipant.Action.JOINED))
-@Istu.four.on_update(fl.call_participant(GroupCallParticipant.Action.JOINED))
-@Istu.five.on_update(fl.call_participant(GroupCallParticipant.Action.JOINED))
 async def participant_join(_, update: UpdatedGroupCallParticipant):
     chat_id = update.chat_id
     user_id = update.participant.user_id
-
     if not await is_vc_logger(chat_id):
         return
-
     await send_join_notification(chat_id, user_id)
 
 
-@Istu.one.on_update(fl.call_participant(GroupCallParticipant.Action.LEFT))
-@Istu.two.on_update(fl.call_participant(GroupCallParticipant.Action.LEFT))
-@Istu.three.on_update(fl.call_participant(GroupCallParticipant.Action.LEFT))
-@Istu.four.on_update(fl.call_participant(GroupCallParticipant.Action.LEFT))
-@Istu.five.on_update(fl.call_participant(GroupCallParticipant.Action.LEFT))
 async def participant_left(_, update: UpdatedGroupCallParticipant):
     chat_id = update.chat_id
     user_id = update.participant.user_id
-
     if not await is_vc_logger(chat_id):
         return
-
     await send_leave_notification(chat_id, user_id)
 
 
-async def setup_vc_logger():
-    try:
-        await asyncio.sleep(5)
-        chats = await get_served_chats()
+def register_vc_handlers():
+    """Sirf jo clients available hain unpe register karo"""
+    clients = [Istu.one, Istu.two, Istu.three, Istu.four, Istu.five]
+    join_filter = fl.call_participant(GroupCallParticipant.Action.JOINED)
+    left_filter = fl.call_participant(GroupCallParticipant.Action.LEFT)
 
-        for chat in chats:
-            chat_id = chat.get("chat_id")
-            if chat_id:
-                if await is_vc_logger(chat_id):
-                    enabled_chats.add(chat_id)
+    for client in clients:
+        if client is None:
+            continue
+        client.add_handler(join_filter, participant_join)
+        client.add_handler(left_filter, participant_left)
 
-        logger.info("VC Logger setup done")
-
-    except Exception as e:
-        logger.error(f"Setup VC logger error: {e}")
+    logger.info("VC Logger handlers registered")
 
 
 @app.on_message(filters.command(["vclogger", "vclog"]) & filters.group)
@@ -179,9 +163,25 @@ async def vclogger_cmd(client, message: Message):
         await message.reply_text("**ᴜsᴇ:** /vclogger on | off")
 
 
+async def setup_vc_logger():
+    try:
+        await asyncio.sleep(5)
+        register_vc_handlers()  # handlers yahan register honge startup ke baad
+        chats = await get_served_chats()
+
+        for chat in chats:
+            chat_id = chat.get("chat_id")
+            if chat_id:
+                if await is_vc_logger(chat_id):
+                    enabled_chats.add(chat_id)
+
+        logger.info("VC Logger setup done")
+
+    except Exception as e:
+        logger.error(f"Setup VC logger error: {e}")
+
+
 try:
     asyncio.create_task(setup_vc_logger())
 except Exception as e:
     logger.error(f"Failed to schedule setup: {e}")
-
-
