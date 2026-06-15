@@ -544,21 +544,26 @@ class Call:
             await self.five.start()
 
     async def decorators(self):
-        @self.one.on_update(fl.chat_update(ChatUpdate.Status.KICKED | ChatUpdate.Status.LEFT_GROUP | ChatUpdate.Status.CLOSED_VOICE_CHAT))
-        @self.two.on_update(fl.chat_update(ChatUpdate.Status.KICKED | ChatUpdate.Status.LEFT_GROUP | ChatUpdate.Status.CLOSED_VOICE_CHAT))
-        @self.three.on_update(fl.chat_update(ChatUpdate.Status.KICKED | ChatUpdate.Status.LEFT_GROUP | ChatUpdate.Status.CLOSED_VOICE_CHAT))
-        @self.four.on_update(fl.chat_update(ChatUpdate.Status.KICKED | ChatUpdate.Status.LEFT_GROUP | ChatUpdate.Status.CLOSED_VOICE_CHAT))
-        @self.five.on_update(fl.chat_update(ChatUpdate.Status.KICKED | ChatUpdate.Status.LEFT_GROUP | ChatUpdate.Status.CLOSED_VOICE_CHAT))
-        async def stream_services_handler(client, update: Update):
-            await self.stop_stream(update.chat_id)
+        clients = [self.one, self.two, self.three, self.four, self.five]
 
-        @self.one.on_update(fl.stream_end())
-        @self.two.on_update(fl.stream_end())
-        @self.three.on_update(fl.stream_end())
-        @self.four.on_update(fl.stream_end())
-        @self.five.on_update(fl.stream_end())
-        async def stream_end_handler1(client: PyTgCalls, update: StreamEnded):
-            await self.change_stream(client, update.chat_id)
+        for client in clients:
+            if client is None:
+                continue
+
+            async def make_handlers(c):
+                @c.on_update(fl.chat_update(
+                    ChatUpdate.Status.KICKED |
+                    ChatUpdate.Status.LEFT_GROUP |
+                    ChatUpdate.Status.CLOSED_VOICE_CHAT
+                ))
+                async def stream_services_handler(_, update: Update):
+                    await self.stop_stream(update.chat_id)
+
+                @c.on_update(fl.stream_end())
+                async def stream_end_handler(cli: PyTgCalls, update: StreamEnded):
+                    await self.change_stream(cli, update.chat_id)
+
+            await make_handlers(client)
 
 
 Istu = Call()
