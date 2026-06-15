@@ -1,12 +1,10 @@
 import asyncio
 import shlex
+import shutil  # ADD THIS
 from typing import Tuple
-
 from git import Repo
 from git.exc import GitCommandError, InvalidGitRepositoryError
-
 import config
-
 from ..logging import LOGGER
 
 
@@ -25,11 +23,15 @@ def install_req(cmd: str) -> Tuple[str, str, int, int]:
             process.returncode,
             process.pid,
         )
-
     return asyncio.get_event_loop().run_until_complete(install_requirements())
 
 
 def git():
+    # Heroku pe git binary nahi hoti, skip karo
+    if not shutil.which("git"):
+        LOGGER(__name__).warning("» ɢɪᴛ ɴᴏᴛ ғᴏᴜɴᴅ, sᴋɪᴘᴘɪɴɢ ᴀᴜᴛᴏ-ᴜᴘᴅᴀᴛᴇ")
+        return
+
     REPO_LINK = config.UPSTREAM_REPO
     if config.GIT_TOKEN:
         GIT_USERNAME = REPO_LINK.split("com/")[1].split("/")[0]
@@ -69,4 +71,3 @@ def git():
             repo.git.reset("--hard", "FETCH_HEAD")
         install_req("pip3 install --no-cache-dir -r requirements.txt")
         LOGGER(__name__).info(f"» ꜰᴇᴛᴄʜɪɴɢ ᴜᴘᴅᴀᴛᴇs ꜰʀᴏᴍ ᴜᴘsᴛʀᴇᴀᴍ ʀᴇᴘᴏsɪᴛᴏʀʏ...")
-
