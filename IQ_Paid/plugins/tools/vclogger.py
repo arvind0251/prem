@@ -100,17 +100,37 @@ async def is_admin(chat_id: int, user_id: int) -> bool:
         return False
 
 
+# ✅ FIXED: participant_join function
 async def participant_join(_, update: UpdatedGroupCallParticipant):
     chat_id = update.chat_id
-    user_id = update.participant.user_id
+    
+    # ✅ Safe check for participant attribute
+    if hasattr(update, 'participant') and update.participant:
+        user_id = update.participant.user_id
+    elif hasattr(update, 'user_id'):
+        user_id = update.user_id
+    else:
+        logger.error(f"Cannot get user_id from update: {update}")
+        return
+    
     if not await is_vc_logger(chat_id):
         return
     await send_join_notification(chat_id, user_id)
 
 
+# ✅ FIXED: participant_left function
 async def participant_left(_, update: UpdatedGroupCallParticipant):
     chat_id = update.chat_id
-    user_id = update.participant.user_id
+    
+    # ✅ Safe check for participant attribute
+    if hasattr(update, 'participant') and update.participant:
+        user_id = update.participant.user_id
+    elif hasattr(update, 'user_id'):
+        user_id = update.user_id
+    else:
+        logger.error(f"Cannot get user_id from update: {update}")
+        return
+    
     if not await is_vc_logger(chat_id):
         return
     await send_leave_notification(chat_id, user_id)
