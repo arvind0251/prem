@@ -27,7 +27,7 @@ ASSUSERNAME = getenv("ASSUSERNAME")
 MONGO_DB_URI = getenv("MONGO_DB_URI", "")
 LOGGER_ID = int(_require("LOGGER_ID"))
 # ======================================================
-YTPROXY_URL2 = 'https://api.babiesiq.tech'
+YTPROXY_URL2 = getenv("YTPROXY_URL2", "https://api.babiesiq.tech")
 YT_API_KEY2 = getenv("YT_API_KEY2", "")
 ARTIST_API_URL = getenv("ARTIST_API_URL", "https://api.artistbotsapi.bond")
 ARTIST_API_KEY = getenv("ARTIST_API_KEY", "")
