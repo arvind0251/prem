@@ -44,7 +44,7 @@ class Helper(object):
 /setphoto : sᴇᴛ ɢʀᴏᴜᴘ ᴘʜᴏᴛᴏ
 /rmphoto : ʀᴇᴍᴏᴠᴇ ɢʀᴏᴜᴘ ᴘʜᴏᴛᴏ
 
-**⊚ ᴘᴏᴡᴇʀᴇᴅ ʙʏ :- [˹ʙᴏᴛѕ˼](https://t.me/Prem_Assistant)**
+**⊚ ᴘᴏᴡᴇʀᴇᴅ ʙʏ :- [˹ʙᴏᴛѕ˼](https://t.me/l_Smoke_ll)**
 '''
 
     HELP_MOD = '''
@@ -56,7 +56,7 @@ class Helper(object):
 /unbanall : ᴜɴʙᴀɴ ᴀʟʟ ʙᴀɴɴᴇᴅ ᴍᴇᴍʙᴇʀs
 /unpinall : ᴜɴᴘɪɴ ᴀʟʟ ᴘɪɴɴᴇᴅ ᴍᴇssᴀɢᴇs
 
-**⊚ ᴘᴏᴡᴇʀᴇᴅ ʙʏ :- [˹ʙᴏᴛѕ˼](https://t.me/Prem_Assistant)**
+**⊚ ᴘᴏᴡᴇʀᴇᴅ ʙʏ :- [˹ʙᴏᴛѕ˼](https://t.me/l_Smoke_ll)**
 '''
     
     HELP_WEL = '''
@@ -65,7 +65,7 @@ class Helper(object):
 /welcome on : ᴇɴᴀʙʟᴇ ᴡᴇʟᴄᴏᴍᴇ
 /welcome off : ᴅɪsᴀʙʟᴇ ᴡᴇʟᴄᴏᴍᴇ
 
-**⊚ ᴘᴏᴡᴇʀᴇᴅ ʙʏ :- [˹ʙᴏᴛѕ˼](https://t.me/Prem_Assistant)**
+**⊚ ᴘᴏᴡᴇʀᴇᴅ ʙʏ :- [˹ʙᴏᴛѕ˼](https://t.me/l_Smoke_ll)**
 '''
 
     HELP_VC = '''
@@ -74,7 +74,7 @@ class Helper(object):
 /vclogger on : ᴠᴄ ʟᴏɢɢᴇʀ ᴏɴ
 /vclogger off : ᴠᴄ ʟᴏɢɢᴇʀ ᴏғғ
 
-**⊚ ᴘᴏᴡᴇʀᴇᴅ ʙʏ :- [˹ʙᴏᴛѕ˼](https://t.me/Prem_Assistant)**
+**⊚ ᴘᴏᴡᴇʀᴇᴅ ʙʏ :- [˹ʙᴏᴛѕ˼](https://t.me/l_Smoke_ll)**
 '''
 
     HELP_ADMIN = '''
@@ -84,7 +84,7 @@ class Helper(object):
 /demote : ᴅᴇᴍᴏᴛᴇ ᴜsᴇʀ ᴀɴ ᴀᴅᴍɪɴ
 /fullpromote : ᴘʀᴏᴍᴏᴛᴇ ᴜsᴇʀs ᴀᴅᴍɪɴ ᴡɪᴛʜ ғᴜʟʟ ʀɪɢʜᴛs
 
-**⊚ ᴘᴏᴡᴇʀᴇᴅ ʙʏ :- [˹ʙᴏᴛѕ˼](https://t.me/Prem_Assistant)**
+**⊚ ᴘᴏᴡᴇʀᴇᴅ ʙʏ :- [˹ʙᴏᴛѕ˼](https://t.me/l_Smoke_ll)**
 '''
 
 
@@ -97,5 +97,5 @@ class Helper(object):
 /unmute : ᴜɴᴍᴜᴛᴇ ᴀ ᴜsᴇʀ
 /tmute : ᴛɪᴍɪɴɢ ᴍᴜᴛᴇ 
 
-**⊚ ᴘᴏᴡᴇʀᴇᴅ ʙʏ :- [˹ʙᴏᴛѕ˼](https://t.me/Prem_Assistant)**
+**⊚ ᴘᴏᴡᴇʀᴇᴅ ʙʏ :- [˹ʙᴏᴛѕ˼](https://t.me/l_Smoke_ll)**
     '''
