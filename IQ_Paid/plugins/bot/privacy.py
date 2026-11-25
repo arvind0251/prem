@@ -9,7 +9,7 @@ async def privacy_command(client: Client, message: Message):
         caption="**➻ ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ɪsᴛᴋʜᴀʀ ʙᴏᴛꜱ ᴘʀɪᴠᴀᴄʏ ᴘᴏʟɪᴄʏ.**\n\n**⊚ ᴄʟɪᴄᴋ ᴛʜᴇ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛʜᴇɴ ꜱᴇᴇ ᴘʀɪᴠᴀᴄʏ ᴘᴏʟɪᴄʏ 🔏**",
         reply_markup=InlineKeyboardMarkup(
             [
-                [InlineKeyboardButton("˹ ᴘʀɪᴠᴀᴄʏ ˼", url="https://docs.google.com/document/d/11Q_ZuvSzkhkgbvVrPxQdqktP2_ioiaqAa7QdsHezfnM/mobilebasic")]
+                [InlineKeyboardButton("˹ ᴘʀɪᴠᴀᴄʏ ˼", url="https://t.me/datacheak")]
             ]
         )
     )

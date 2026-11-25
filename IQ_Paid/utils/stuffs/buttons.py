@@ -23,7 +23,7 @@ class BUTTONS(object):
     ],
     [
         
-        InlineKeyboardButton("ᴘʀɪᴠᴧᴄʏ", url="https://docs.google.com/document/d/11Q_ZuvSzkhkgbvVrPxQdqktP2_ioiaqAa7QdsHezfnM/mobilebasic"),
+        InlineKeyboardButton("ᴘʀɪᴠᴧᴄʏ", url="https://t.me/datacheak"),
         primary_button(text="• ʙᴧᴄᴋ •", callback_data="settingsback_helper"),
     ]
     ]
