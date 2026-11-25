@@ -26,8 +26,8 @@ class Helper(object):
 ● ᴋᴇᴇᴘ ᴄʜᴧᴛ ᴄʟєᴧη ᴧηᴅ ʙᴜɢ-ғʀєє.
 ● ᴧηʏ ᴘʀσʙʟєϻ ? ᴊᴜsᴛ ᴄσηᴛᴧᴄᴛ ᴜs.
 ─────────────────────────
-❖ υᴘᴅᴧᴛєs ᴄʜᴧηηєʟ ➥ [˹ʙᴏᴛѕ˼](https://t.me/+8WjqAqBihwkyNzk9)
-❖ sυᴘᴘσʀᴛ ᴄʜᴧᴛ ➥ [˹ʙᴏᴛѕ˼](https://t.me/+8WjqAqBihwkyNzk9)
+❖ υᴘᴅᴧᴛєs ᴄʜᴧηηєʟ ➥ [˹ʙᴏᴛѕ˼](https://t.me/l_Smoke_ll)
+❖ sυᴘᴘσʀᴛ ᴄʜᴧᴛ ➥ [˹ʙᴏᴛѕ˼](https://t.me/l_Smoke_ll)
 ❖ ɢɪᴛ ʜᴜʙ ʟɪηᴋ ➥ [@l_Smoke_ll](https://t.me/l_Smoke_ll)
 ─────────────────────────**
 '''
