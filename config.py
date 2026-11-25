@@ -20,6 +20,8 @@ LOGGER_ID = int(getenv("LOGGER_ID", "-1003781924669"))
 # ======================================================
 YTPROXY_URL2 = 'https://api.babiesiq.tech'
 YT_API_KEY2 = getenv("YT_API_KEY2", "")
+ARTIST_API_URL = getenv("ARTIST_API_URL", "https://api.artistbotsapi.bond")
+ARTIST_API_KEY = getenv("ARTIST_API_KEY", "")
 # ======================================================
 TG_SONGS_STORAGE = "-1003947409698"
 TG_INDEX_CHANNEL = "-1003719552350"

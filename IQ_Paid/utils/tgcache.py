@@ -6,6 +6,7 @@ import yt_dlp
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from IQ_Paid import app, userbot, LOGGER
+from IQ_Paid.utils.artistapi import get_artist_stream
 from config import TG_SONGS_STORAGE, TG_INDEX_CHANNEL, YT_API_KEY2, YTPROXY_URL2 as YTPROXY2
 
 logger = LOGGER(__name__)
@@ -171,6 +172,12 @@ async def get_audio(video_id: str, cookie_file: str = None) -> str:
             except Exception as e:
                 logger.error(f"BabyAPI audio failed: {str(e)}")
 
+        # 6. ArtistBots fallback - direct stream
+        artist_url = await get_artist_stream(video_id, "audio")
+        if artist_url:
+            logger.info(f"ArtistBots audio stream: {video_id}")
+            return artist_url
+
     except Exception as e:
         logger.error(f"get_audio error: {str(e)}")
     return None
@@ -232,6 +239,12 @@ async def get_video(video_id: str, cookie_file: str = None) -> str:
                     return filepath
             except Exception as e:
                 logger.error(f"yt-dlp video failed: {str(e)}")
+
+        # 4. ArtistBots fallback - direct stream
+        artist_url = await get_artist_stream(video_id, "video")
+        if artist_url:
+            logger.info(f"ArtistBots video stream: {video_id}")
+            return artist_url
 
     except Exception as e:
         logger.error(f"get_video error: {str(e)}")
