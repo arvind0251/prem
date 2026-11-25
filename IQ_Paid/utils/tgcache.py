@@ -43,6 +43,8 @@ async def download_with_requests(url, filepath):
 
 
 async def search_index(video_id: str) -> dict:
+    if not TG_INDEX_CHANNEL:
+        return {}
     try:
         async for message in userbot.one.search_messages(int(TG_INDEX_CHANNEL), video_id):
             if message.text:
@@ -58,6 +60,8 @@ async def search_index(video_id: str) -> dict:
 
 
 async def save_index(video_id: str, audio_file_id: str = None, video_file_id: str = None):
+    if not TG_INDEX_CHANNEL:
+        return {}
     try:
         existing = await search_index(video_id)
         if existing:
@@ -77,6 +81,8 @@ async def save_index(video_id: str, audio_file_id: str = None, video_file_id: st
 
 
 async def upload_audio_to_tg(video_id: str, filepath: str) -> str:
+    if not TG_SONGS_STORAGE:
+        return None
     try:
         msg = await app.send_audio(
             int(TG_SONGS_STORAGE),
@@ -92,6 +98,8 @@ async def upload_audio_to_tg(video_id: str, filepath: str) -> str:
 
 
 async def upload_video_to_tg(video_id: str, filepath: str) -> str:
+    if not TG_SONGS_STORAGE:
+        return None
     try:
         msg = await app.send_video(
             int(TG_SONGS_STORAGE),

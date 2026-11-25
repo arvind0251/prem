@@ -2,18 +2,24 @@ from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
 from pyrogram.errors import ChatAdminRequired, UserNotParticipant, ChatWriteForbidden
 from IQ_Paid import app
+from config import MUST_JOIN as _MUST_JOIN
 
-MUST_JOIN = "IamIstkhar"
+_RAW = (_MUST_JOIN or "").strip().replace("https://t.me/", "").lstrip("@")
+if _RAW.lstrip("-").isdigit():
+    MUST_JOIN = int(_RAW)
+else:
+    MUST_JOIN = _RAW
+
 
 @app.on_message(filters.incoming & filters.private, group=-1)
 async def must_join_channel(app: Client, msg: Message):
-    if not MUST_JOIN:
+    if not MUST_JOIN or not msg.from_user:
         return
     try:
         try:
             await app.get_chat_member(MUST_JOIN, msg.from_user.id)
         except UserNotParticipant:
-            if MUST_JOIN.isalpha():
+            if isinstance(MUST_JOIN, str):
                 link = "https://t.me/" + MUST_JOIN
             else:
                 chat_info = await app.get_chat(MUST_JOIN)
@@ -33,3 +39,5 @@ async def must_join_channel(app: Client, msg: Message):
                 pass
     except ChatAdminRequired:
         print(f"๏ ᴘʀᴏᴍᴏᴛᴇ ᴍᴇ ᴀs ᴀɴ ᴀᴅᴍɪɴ ɪɴ ᴛʜᴇ ᴍᴜsᴛ_ᴊᴏɪɴ ᴄʜᴀᴛ ๏: {MUST_JOIN} !")
+    except Exception as e:
+        print(f"MUST_JOIN check skipped: {type(e).__name__}")

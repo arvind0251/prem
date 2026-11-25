@@ -4,27 +4,37 @@ from os import getenv
 from dotenv import load_dotenv
 from pyrogram import filters
 load_dotenv()
+
+
+def _require(name):
+    val = getenv(name)
+    if not val:
+        raise SystemExit(f"\n[CONFIG ERROR] {name} .env mein set nahi hai. Apni value daalo, phir bot chalao.\n")
+    return val
+
+
 # ======================================================
-API_ID = int(getenv("API_ID", "39917988"))
+API_ID = int(_require("API_ID"))
 API_HASH = getenv("API_HASH", "")
 BOT_TOKEN = getenv("BOT_TOKEN", "")
 # ======================================================
-OWNER_ID = int(getenv("OWNER_ID", "7875184322"))
+OWNER_ID = int(_require("OWNER_ID"))
 OWNER_USERNAME = "Itzz_Istkhar"
 BOT_USERNAME = "Sukku_Music_Bot"
 BOT_NAME = "Sonali Music"
 ASSUSERNAME = getenv("ASSUSERNAME")
 # ======================================================
 MONGO_DB_URI = getenv("MONGO_DB_URI", "")
-LOGGER_ID = int(getenv("LOGGER_ID", "-1003781924669"))
+LOGGER_ID = int(_require("LOGGER_ID"))
 # ======================================================
 YTPROXY_URL2 = 'https://api.babiesiq.tech'
 YT_API_KEY2 = getenv("YT_API_KEY2", "")
 ARTIST_API_URL = getenv("ARTIST_API_URL", "https://api.artistbotsapi.bond")
 ARTIST_API_KEY = getenv("ARTIST_API_KEY", "")
 # ======================================================
-TG_SONGS_STORAGE = "-1003947409698"
-TG_INDEX_CHANNEL = "-1003719552350"
+TG_SONGS_STORAGE = getenv("TG_SONGS_STORAGE", "")
+TG_INDEX_CHANNEL = getenv("TG_INDEX_CHANNEL", "")
+MUST_JOIN = getenv("MUST_JOIN", "")
 # ======================================================
 DURATION_LIMIT_MIN = int(17000)
 SONG_DOWNLOAD_DURATION = int("9999999")
