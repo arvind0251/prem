@@ -30,3 +30,4 @@ opencv-python
 beautifulsoup4
 numpy
 PyGithub==2.3.0
+six
