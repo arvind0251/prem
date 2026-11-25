@@ -6,7 +6,7 @@ import yt_dlp
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from IQ_Paid import app, userbot, LOGGER
-from config import TG_SONGS_STORAGE, TG_INDEX_CHANNEL, YT_API_KEY, YTPROXY_URL as YTPROXY, YT_API_KEY2, YTPROXY_URL2 as YTPROXY2
+from config import TG_SONGS_STORAGE, TG_INDEX_CHANNEL, YT_API_KEY2, YTPROXY_URL2 as YTPROXY2
 
 logger = LOGGER(__name__)
 
@@ -121,34 +121,6 @@ async def get_audio(video_id: str, cookie_file: str = None) -> str:
             _memory_cache.setdefault(video_id, {})["audio"] = filepath
             return filepath
 
-        # 3. xBit API - download to VPS
-        if YT_API_KEY and YTPROXY:
-            try:
-                session = create_session()
-                headers = {"x-api-key": YT_API_KEY, "User-Agent": "Mozilla/5.0"}
-                resp = session.get(f"{YTPROXY}/info/{video_id}", headers=headers, timeout=60)
-                data = resp.json()
-                session.close()
-                if data.get("status") == "success":
-                    audio_url = data.get("audio_url")
-                    if audio_url:
-                        result = await download_with_requests(audio_url, filepath)
-                        if result:
-                            logger.info(f"xBit audio downloaded: {video_id}")
-                            _memory_cache.setdefault(video_id, {})["audio"] = filepath
-                            async def bg_upload_xbit_audio():
-                                try:
-                                    file_id = await upload_audio_to_tg(video_id, filepath)
-                                    if file_id:
-                                        await save_index(video_id, audio_file_id=file_id)
-                                        logger.info(f"BG audio upload done: {video_id}")
-                                except Exception as e:
-                                    logger.error(f"BG audio upload error: {str(e)}")
-                            asyncio.create_task(bg_upload_xbit_audio())
-                            return filepath
-            except Exception as e:
-                logger.error(f"xBit audio failed: {str(e)}")
-
         # 4. yt-dlp + cookies fallback
         if cookie_file:
             try:
@@ -260,22 +232,6 @@ async def get_video(video_id: str, cookie_file: str = None) -> str:
                     return filepath
             except Exception as e:
                 logger.error(f"yt-dlp video failed: {str(e)}")
-
-        # 4. xBit fallback - direct stream
-        if YT_API_KEY and YTPROXY:
-            try:
-                session = create_session()
-                headers = {"x-api-key": YT_API_KEY, "User-Agent": "Mozilla/5.0"}
-                resp = session.get(f"{YTPROXY}/info/{video_id}", headers=headers, timeout=60)
-                data = resp.json()
-                session.close()
-                if data.get("status") == "success":
-                    video_url = data.get("video_url")
-                    if video_url:
-                        logger.info(f"xBit video fallback: {video_id}")
-                        return video_url
-            except Exception as e:
-                logger.error(f"xBit video failed: {str(e)}")
 
     except Exception as e:
         logger.error(f"get_video error: {str(e)}")

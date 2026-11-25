@@ -1,0 +1,6 @@
+*.session
+*.session-journal
+.env
+IQ_Paid/assets/cookies.txt
+__pycache__/
+cookies/

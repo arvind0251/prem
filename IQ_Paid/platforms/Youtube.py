@@ -14,7 +14,7 @@ from urllib3.util.retry import Retry
 from IQ_Paid import LOGGER
 from IQ_Paid.utils.database import is_on_off
 from IQ_Paid.utils.formatters import time_to_seconds
-from config import YT_API_KEY, YTPROXY_URL as YTPROXY, YT_API_KEY2, YTPROXY_URL2 as YTPROXY2
+from config import YT_API_KEY2, YTPROXY_URL2 as YTPROXY2
 from IQ_Paid.utils.tgcache import get_audio, get_video
 from py_yt import VideosSearch
 
@@ -345,23 +345,7 @@ class YouTubeAPI:
                     logger.info(f"TG cache audio: {vid_id}")
                     return tg_result
 
-                # xBit primary - direct stream
-                if YT_API_KEY and YTPROXY:
-                    try:
-                        session = create_session()
-                        headers = {"x-api-key": YT_API_KEY, "User-Agent": "Mozilla/5.0"}
-                        resp = session.get(f"{YTPROXY}/info/{vid_id}", headers=headers, timeout=60)
-                        data = resp.json()
-                        session.close()
-                        if data.get("status") == "success":
-                            audio_url = data.get("audio_url")
-                            if audio_url:
-                                logger.info(f"xBit audio success: {vid_id}")
-                                return audio_url
-                    except Exception as e:
-                        logger.error(f"xBit audio failed: {str(e)}")
-
-                # BabyAPI backup
+                # BabiesIQ backup
                 if YT_API_KEY2 and YTPROXY2:
                     try:
                         session = create_session()
@@ -391,22 +375,6 @@ class YouTubeAPI:
                     logger.info(f"TG cache video: {vid_id}")
                     return tg_result
 
-                # xBit fallback - direct stream
-                if YT_API_KEY and YTPROXY:
-                    try:
-                        session = create_session()
-                        headers = {"x-api-key": YT_API_KEY, "User-Agent": "Mozilla/5.0"}
-                        resp = session.get(f"{YTPROXY}/info/{vid_id}", headers=headers, timeout=60)
-                        data = resp.json()
-                        session.close()
-                        if data.get("status") == "success":
-                            video_url = data.get("video_url")
-                            if video_url:
-                                logger.info(f"xBit video fallback: {vid_id}")
-                                return video_url
-                    except Exception as e:
-                        logger.error(f"xBit video failed: {str(e)}")
-
                 return None
             except Exception as e:
                 logger.error(f"video_dl error: {str(e)}")
@@ -420,19 +388,6 @@ class YouTubeAPI:
                 if tg_result:
                     return tg_result
 
-                if YT_API_KEY and YTPROXY:
-                    try:
-                        session = create_session()
-                        headers = {"x-api-key": YT_API_KEY, "User-Agent": "Mozilla/5.0"}
-                        resp = session.get(f"{YTPROXY}/info/{vid_id}", headers=headers, timeout=60)
-                        data = resp.json()
-                        session.close()
-                        if data.get("status") == "success":
-                            video_url = data.get("video_url")
-                            if video_url:
-                                return video_url
-                    except Exception as e:
-                        logger.error(f"song_video_dl xBit failed: {str(e)}")
                 return None
             except Exception as e:
                 logger.error(f"song_video_dl error: {str(e)}")
@@ -446,19 +401,20 @@ class YouTubeAPI:
                 if tg_result:
                     return tg_result
 
-                if YT_API_KEY and YTPROXY:
+                # BabiesIQ
+                if YT_API_KEY2 and YTPROXY2:
                     try:
                         session = create_session()
-                        headers = {"x-api-key": YT_API_KEY, "User-Agent": "Mozilla/5.0"}
-                        resp = session.get(f"{YTPROXY}/info/{vid_id}", headers=headers, timeout=60)
+                        url = f"{YTPROXY2}/api/song?query={vid_id}&api={YT_API_KEY2}"
+                        resp = session.get(url, timeout=60)
                         data = resp.json()
                         session.close()
-                        if data.get("status") == "success":
-                            audio_url = data.get("audio_url")
-                            if audio_url:
-                                return audio_url
+                        stream_url = data.get("stream")
+                        if stream_url:
+                            return stream_url
                     except Exception as e:
-                        logger.error(f"song_audio_dl xBit failed: {str(e)}")
+                        logger.error(f"song_audio_dl BabiesIQ failed: {str(e)}")
+
                 return None
             except Exception as e:
                 logger.error(f"song_audio_dl error: {str(e)}")

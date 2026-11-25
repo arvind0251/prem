@@ -6,8 +6,8 @@ from pyrogram import filters
 load_dotenv()
 # ======================================================
 API_ID = int(getenv("API_ID", "39917988"))
-API_HASH = getenv("API_HASH", "bd827dbeac6a55896ff11539bc80365b")
-BOT_TOKEN = getenv("BOT_TOKEN", "8522799922:AAELRX3i7EzN9nCeQa_6x4BhgJKo6Z9V55w")
+API_HASH = getenv("API_HASH", "")
+BOT_TOKEN = getenv("BOT_TOKEN", "")
 # ======================================================
 OWNER_ID = int(getenv("OWNER_ID", "7875184322"))
 OWNER_USERNAME = "Itzz_Istkhar"
@@ -15,13 +15,11 @@ BOT_USERNAME = "Sukku_Music_Bot"
 BOT_NAME = "Sonali Music"
 ASSUSERNAME = getenv("ASSUSERNAME")
 # ======================================================
-MONGO_DB_URI = getenv("MONGO_DB_URI", "mongodb+srv://marin:marin69@cluster0.zxaf7uc.mongodb.net/?retryWrites=true&w=majority")
+MONGO_DB_URI = getenv("MONGO_DB_URI", "")
 LOGGER_ID = int(getenv("LOGGER_ID", "-1003781924669"))
 # ======================================================
-YTPROXY_URL = 'https://tgapi.xbitcode.com'
-YT_API_KEY = 'xbit_DSsv0UVt9GVmGSTN5RViq7i-u4qHyFJK'
-YTPROXY_URL2 = 'https://BabyAPI.Pro'
-YT_API_KEY2 = 'ADMINBABYX1C073D754502E7A7D0305725EC0E41F5'
+YTPROXY_URL2 = 'https://api.babiesiq.tech'
+YT_API_KEY2 = getenv("YT_API_KEY2", "")
 # ======================================================
 TG_SONGS_STORAGE = "-1003947409698"
 TG_INDEX_CHANNEL = "-1003719552350"
@@ -37,19 +35,19 @@ AUTO_LEAVING_ASSISTANT = "True"
 AUTO_LEAVE_ASSISTANT_TIME = int("300")
 # ======================================================
 HEROKU_APP_NAME = getenv("HEROKU_APP_NAME")
-HEROKU_API_KEY = getenv("HEROKU_API_KEY")
+HEROKU_API_KEY = getenv("HEROKU_API_KEY", "")
 # ======================================================
 UPSTREAM_REPO = "https://github.com/BabiesIQ/PAID"
 UPSTREAM_BRANCH = "main"
-GIT_TOKEN = None
+GIT_TOKEN = getenv("GIT_TOKEN", "")
 # ======================================================
 SUPPORT_CHANNEL = "https://t.me/+8WjqAqBihwkyNzk9"
 SUPPORT_CHAT = "https://t.me/+8WjqAqBihwkyNzk9"
 # ======================================================
-SPOTIFY_CLIENT_ID = "1c21247d714244ddbb09925dac565aed"
-SPOTIFY_CLIENT_SECRET = "709e1a2969664491b58200860623ef19"
+SPOTIFY_CLIENT_ID = getenv("SPOTIFY_CLIENT_ID", "")
+SPOTIFY_CLIENT_SECRET = getenv("SPOTIFY_CLIENT_SECRET", "")
 # ======================================================
-STRING1 = getenv("STRING_SESSION", "BQJhGaQAQWHQ0bglmSEO1RqkGs7g-hBZRIAFAsyBe3Bv-_LcKGaHfiVzw8f6QoHDSfhTz48wqupMPes1YucX7MNY5n_TjG_4pU-1rbv3AIcf85dX-SuKBC9Atu8wvAXhCQEgrzhZXBrk7tLWoZB5bFvolc6sOxGqvrK1SbDsccGkLdBN61RPlncQJTWaIjhHZ4d5IOzaqkYulxREn-aar9-dt33UqcFSQjsAoJYsZX8XzW6MGBDQ8VQkffC36QmOIwv64WWqbmVmLriVy0_MNwfmnMIGJQYmdnJMcx2QNNKwRcdjH0OgFVa8rezIyd3-YfWKtj_TInIl5mP9CZPpNbdNdfjuOQAAAAHVZcbCAA")
+STRING1 = getenv("STRING1", "")
 STRING2 = None
 STRING3 = None
 STRING4 = None
