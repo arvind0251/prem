@@ -1,3 +1,5 @@
+from config import SUPPORT_CHAT
+from IQ_Paid import app
 from IQ_Paid.misc import SUDOERS
 from IQ_Paid.utils.database import get_lang, is_maintenance
 from strings import get_string

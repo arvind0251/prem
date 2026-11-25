@@ -71,7 +71,7 @@ async def start_pm(client, message: Message, _):
         name = message.text.split(None, 1)[1]
 
         if name[0:3] == "del":
-            await del_plist_msg(client=client, message=message, _=_)
+            pass
         
         if name[0:4] == "help":
             keyboard = help_pannel(_)

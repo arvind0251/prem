@@ -48,7 +48,7 @@ async def skip(cli, message: Message, _, chat_id):
                                         ),
                                         reply_markup=close_markup(_),
                                     )
-                                    await PURVI.stop_stream(chat_id)
+                                    await Istu.stop_stream(chat_id)
                                 except:
                                     return
                                 break

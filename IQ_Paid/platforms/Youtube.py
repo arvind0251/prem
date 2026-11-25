@@ -16,7 +16,7 @@ from IQ_Paid.utils.database import is_on_off
 from IQ_Paid.utils.formatters import time_to_seconds
 from config import YT_API_KEY2, YTPROXY_URL2 as YTPROXY2
 from IQ_Paid.utils.tgcache import get_audio, get_video
-from py_yt import VideosSearch
+from py_yt import VideosSearch, Playlist
 
 logger = LOGGER(__name__)
 
