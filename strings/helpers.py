@@ -121,7 +121,7 @@ HELP_6 = """
 
 /gbannedusers : sʜᴏᴡs ᴛʜᴇ ʟɪsᴛ ᴏғ ɢʟᴏʙᴀʟʟʏ ʙᴀɴɴᴇᴅ ᴜsᴇʀs.
 
-**⊚ ᴄʀᴇᴀᴛᴇᴅ ʙʏ :- [˹ʙʀᴏᴛʜᴇʀ ʜᴏᴏᴅ˼](https://t.me/+8WjqAqBihwkyNzk9)**
+**⊚ ᴄʀᴇᴀᴛᴇᴅ ʙʏ :- [˹ʙᴏᴛѕ˼](https://t.me/l_Smoke_ll)**
 """
 
 HELP_7 = """

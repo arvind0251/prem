@@ -43,8 +43,8 @@ UPSTREAM_REPO = "https://github.com/BabiesIQ/PAID"
 UPSTREAM_BRANCH = "main"
 GIT_TOKEN = getenv("GIT_TOKEN", "")
 # ======================================================
-SUPPORT_CHANNEL = "https://t.me/+8WjqAqBihwkyNzk9"
-SUPPORT_CHAT = "https://t.me/+8WjqAqBihwkyNzk9"
+SUPPORT_CHANNEL = "https://t.me/l_Smoke_ll"
+SUPPORT_CHAT = "https://t.me/l_Smoke_ll"
 # ======================================================
 SPOTIFY_CLIENT_ID = getenv("SPOTIFY_CLIENT_ID", "")
 SPOTIFY_CLIENT_SECRET = getenv("SPOTIFY_CLIENT_SECRET", "")
