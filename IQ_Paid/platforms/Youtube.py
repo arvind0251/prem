@@ -345,21 +345,6 @@ class YouTubeAPI:
                     logger.info(f"TG cache audio: {vid_id}")
                     return tg_result
 
-                # BabiesIQ backup
-                if YT_API_KEY2 and YTPROXY2:
-                    try:
-                        session = create_session()
-                        url = f"{YTPROXY2}/api/song?query={vid_id}&api={YT_API_KEY2}"
-                        resp = session.get(url, timeout=60)
-                        data = resp.json()
-                        session.close()
-                        stream_url = data.get("stream")
-                        if stream_url:
-                            logger.info(f"BabyAPI audio success: {vid_id}")
-                            return stream_url
-                    except Exception as e:
-                        logger.error(f"BabyAPI audio failed: {str(e)}")
-
                 return None
             except Exception as e:
                 logger.error(f"audio_dl error: {str(e)}")
@@ -400,20 +385,6 @@ class YouTubeAPI:
                 tg_result = await get_audio(vid_id, cookie_file)
                 if tg_result:
                     return tg_result
-
-                # BabiesIQ
-                if YT_API_KEY2 and YTPROXY2:
-                    try:
-                        session = create_session()
-                        url = f"{YTPROXY2}/api/song?query={vid_id}&api={YT_API_KEY2}"
-                        resp = session.get(url, timeout=60)
-                        data = resp.json()
-                        session.close()
-                        stream_url = data.get("stream")
-                        if stream_url:
-                            return stream_url
-                    except Exception as e:
-                        logger.error(f"song_audio_dl BabiesIQ failed: {str(e)}")
 
                 return None
             except Exception as e:

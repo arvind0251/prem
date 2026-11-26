@@ -6,7 +6,7 @@ import yt_dlp
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from IQ_Paid import app, userbot, LOGGER
-from IQ_Paid.utils.artistapi import get_artist_stream
+from IQ_Paid.utils.artistapi import get_fast_stream
 from config import TG_SONGS_STORAGE, TG_INDEX_CHANNEL, YT_API_KEY2, YTPROXY_URL2 as YTPROXY2
 
 logger = LOGGER(__name__)
@@ -130,7 +130,12 @@ async def get_audio(video_id: str, cookie_file: str = None) -> str:
             _memory_cache.setdefault(video_id, {})["audio"] = filepath
             return filepath
 
-        # 4. yt-dlp + cookies fallback
+        # 3. Fast API race (BabiesIQ + ArtistBots in parallel) - no download, quickest
+        fast_url = await get_fast_stream(video_id, "audio")
+        if fast_url:
+            return fast_url
+
+        # 4. yt-dlp + cookies fallback (runs in a thread, bot does not freeze)
         if cookie_file:
             try:
                 ydl_opts = {
@@ -148,7 +153,7 @@ async def get_audio(video_id: str, cookie_file: str = None) -> str:
                     }],
                 }
                 x = yt_dlp.YoutubeDL(ydl_opts)
-                x.download([f"https://www.youtube.com/watch?v={video_id}"])
+                await asyncio.to_thread(x.download, [f"https://www.youtube.com/watch?v={video_id}"])
                 if os.path.exists(filepath):
                     logger.info(f"yt-dlp audio downloaded: {video_id}")
                     _memory_cache.setdefault(video_id, {})["audio"] = filepath
@@ -164,27 +169,6 @@ async def get_audio(video_id: str, cookie_file: str = None) -> str:
                     return filepath
             except Exception as e:
                 logger.error(f"yt-dlp audio failed: {str(e)}")
-
-        # 5. BabyAPI fallback - direct stream
-        if YT_API_KEY2 and YTPROXY2:
-            try:
-                session = create_session()
-                url = f"{YTPROXY2}/api/song?query={video_id}&api={YT_API_KEY2}"
-                resp = session.get(url, timeout=60)
-                data = resp.json()
-                session.close()
-                stream_url = data.get("stream")
-                if stream_url:
-                    logger.info(f"BabyAPI audio stream: {video_id}")
-                    return stream_url
-            except Exception as e:
-                logger.error(f"BabyAPI audio failed: {str(e)}")
-
-        # 6. ArtistBots fallback - direct stream
-        artist_url = await get_artist_stream(video_id, "audio")
-        if artist_url:
-            logger.info(f"ArtistBots audio stream: {video_id}")
-            return artist_url
 
     except Exception as e:
         logger.error(f"get_audio error: {str(e)}")
@@ -207,7 +191,12 @@ async def get_video(video_id: str, cookie_file: str = None) -> str:
             _memory_cache.setdefault(video_id, {})["video"] = filepath
             return filepath
 
-        # 3. yt-dlp 720p + cookies
+        # 3. Fast API (ArtistBots video stream) - no download, quickest
+        fast_url = await get_fast_stream(video_id, "video")
+        if fast_url:
+            return fast_url
+
+        # 4. yt-dlp 720p + cookies fallback (runs in a thread)
         if cookie_file:
             try:
                 # 24hr cleanup
@@ -231,7 +220,7 @@ async def get_video(video_id: str, cookie_file: str = None) -> str:
                     "cookiefile": cookie_file,
                 }
                 x = yt_dlp.YoutubeDL(ydl_opts)
-                x.download([f"https://www.youtube.com/watch?v={video_id}"])
+                await asyncio.to_thread(x.download, [f"https://www.youtube.com/watch?v={video_id}"])
                 if os.path.exists(filepath):
                     logger.info(f"yt-dlp 720p video downloaded: {video_id}")
                     _memory_cache.setdefault(video_id, {})["video"] = filepath
@@ -247,12 +236,6 @@ async def get_video(video_id: str, cookie_file: str = None) -> str:
                     return filepath
             except Exception as e:
                 logger.error(f"yt-dlp video failed: {str(e)}")
-
-        # 4. ArtistBots fallback - direct stream
-        artist_url = await get_artist_stream(video_id, "video")
-        if artist_url:
-            logger.info(f"ArtistBots video stream: {video_id}")
-            return artist_url
 
     except Exception as e:
         logger.error(f"get_video error: {str(e)}")

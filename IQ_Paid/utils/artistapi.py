@@ -1,10 +1,11 @@
 import asyncio
 import logging
+import time
 from urllib.parse import urlencode
 
 import requests
 
-from config import ARTIST_API_URL, ARTIST_API_KEY
+from config import ARTIST_API_URL, ARTIST_API_KEY, YT_API_KEY2, YTPROXY_URL2
 
 logger = logging.getLogger(__name__)
 
@@ -61,3 +62,53 @@ def _fetch(video_id: str, kind: str):
 async def get_artist_stream(video_id: str, kind: str = "audio"):
     """Playable stream URL from ArtistBots API, or None."""
     return await asyncio.to_thread(_fetch, video_id, kind)
+
+
+def _fetch_babies(video_id: str):
+    if not (YT_API_KEY2 and YTPROXY_URL2):
+        return None
+    try:
+        resp = requests.get(
+            f"{YTPROXY_URL2.rstrip('/')}/api/song",
+            params={"query": video_id, "api": YT_API_KEY2},
+            timeout=12,
+        )
+        if resp.status_code != 200:
+            logger.error(f"BabiesIQ audio HTTP {resp.status_code}: {video_id}")
+            return None
+        stream = resp.json().get("stream")
+        return stream if isinstance(stream, str) and stream.startswith("http") else None
+    except Exception as e:
+        logger.error(f"BabiesIQ audio failed: {type(e).__name__}")
+        return None
+
+
+async def get_fast_stream(video_id: str, kind: str = "audio", timeout: float = 15):
+    """Ask every configured API at the same time; return the first working stream URL."""
+    started = time.monotonic()
+    pending = {asyncio.create_task(get_artist_stream(video_id, kind))}
+    if kind == "audio":
+        pending.add(asyncio.create_task(asyncio.to_thread(_fetch_babies, video_id)))
+    result = None
+    try:
+        while pending and result is None:
+            left = timeout - (time.monotonic() - started)
+            if left <= 0:
+                break
+            done, pending = await asyncio.wait(pending, timeout=left, return_when=asyncio.FIRST_COMPLETED)
+            if not done:
+                break
+            for task in done:
+                try:
+                    value = task.result()
+                except Exception:
+                    value = None
+                if value:
+                    result = value
+                    break
+    finally:
+        for task in pending:
+            task.cancel()
+    if result:
+        logger.info(f"Fast {kind} stream ready in {time.monotonic() - started:.1f}s: {video_id}")
+    return result
