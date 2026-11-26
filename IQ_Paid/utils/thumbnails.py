@@ -85,6 +85,18 @@ async def _download_thumb(videoid, path):
     return False
 
 
+_CHANNEL_SEP = re.compile(r"\s*[\u2022\u00b7\u2219\u2027|]\s*|\s+\.\s+")
+
+
+def _clean_channel(name):
+    """'Catchy Beats . 1.4M views . 4 days ago' -> 'Catchy Beats' (keep only the channel part)."""
+    if not name:
+        return None
+    name = str(name).strip()
+    first = _CHANNEL_SEP.split(name)[0].strip()
+    return first or name
+
+
 async def _lookup_channel(videoid):
     try:
         result = await asyncio.wait_for(
@@ -93,7 +105,7 @@ async def _lookup_channel(videoid):
         )
         items = result.get("result") or []
         if items:
-            name = (items[0].get("channel") or {}).get("name")
+            name = _clean_channel((items[0].get("channel") or {}).get("name"))
             if name:
                 channel_cache[videoid] = name
     except Exception:
