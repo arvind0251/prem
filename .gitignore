@@ -1,6 +1,11 @@
+*.log
 *.session
 *.session-journal
 .env
 IQ_Paid/assets/cookies.txt
 __pycache__/
+cache/
 cookies/
+downloads/
+log.txt
+raw_files/
