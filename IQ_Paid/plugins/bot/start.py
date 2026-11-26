@@ -52,14 +52,14 @@ NEXI_VID = [
 async def start_pm(client, message: Message, _):
     await add_served_user(message.from_user.id)
 
-    typing_message = await message.reply("<b> Isᴛᴋʜᴀʀ..Bᴏᴛs..❤️‍🔥</b>")
+    typing_message = await message.reply("<b>˹ʙᴏᴛѕ˼ ❤️‍🔥</b>")
     
     
-    typing_text = "<b>𝖲ᴛᴀʀᴛɪɴɢ...❤️‍🔥</b>"
+    typing_text = "𝖲ᴛᴀʀᴛɪɴɢ...❤️‍🔥"
     
     for i in range(1, len(typing_text) + 1):  
         try:
-            await typing_message.edit_text(typing_text[:i])
+            await typing_message.edit_text(f"<b>{typing_text[:i]}</b>")
             await asyncio.sleep(0.001)  
         except Exception as e:
             print(f"Error while editing message : {e}")  

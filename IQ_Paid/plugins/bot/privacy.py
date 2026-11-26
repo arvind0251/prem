@@ -6,7 +6,7 @@ from IQ_Paid import app
 async def privacy_command(client: Client, message: Message):
     await message.reply_photo(
         photo="https://files.catbox.moe/naban1.jpg",
-        caption="**➻ ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ɪsᴛᴋʜᴀʀ ʙᴏᴛꜱ ᴘʀɪᴠᴀᴄʏ ᴘᴏʟɪᴄʏ.**\n\n**⊚ ᴄʟɪᴄᴋ ᴛʜᴇ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛʜᴇɴ ꜱᴇᴇ ᴘʀɪᴠᴀᴄʏ ᴘᴏʟɪᴄʏ 🔏**",
+        caption="**➻ ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ˹ʙᴏᴛѕ˼ ᴘʀɪᴠᴀᴄʏ ᴘᴏʟɪᴄʏ.**\n\n**⊚ ᴄʟɪᴄᴋ ᴛʜᴇ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛʜᴇɴ ꜱᴇᴇ ᴘʀɪᴠᴀᴄʏ ᴘᴏʟɪᴄʏ 🔏**",
         reply_markup=InlineKeyboardMarkup(
             [
                 [InlineKeyboardButton("˹ ᴘʀɪᴠᴀᴄʏ ˼", url="https://t.me/datacheak")]

@@ -110,7 +110,7 @@ async def participant_join(_, update: UpdatedGroupCallParticipant):
     elif hasattr(update, 'user_id'):
         user_id = update.user_id
     else:
-        logger.error(f"Cannot get user_id from update: {update}")
+        logger.debug(f"Skipping update without user_id: {type(update).__name__}")
         return
     
     if not await is_vc_logger(chat_id):
@@ -128,7 +128,7 @@ async def participant_left(_, update: UpdatedGroupCallParticipant):
     elif hasattr(update, 'user_id'):
         user_id = update.user_id
     else:
-        logger.error(f"Cannot get user_id from update: {update}")
+        logger.debug(f"Skipping update without user_id: {type(update).__name__}")
         return
     
     if not await is_vc_logger(chat_id):

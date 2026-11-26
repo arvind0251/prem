@@ -50,7 +50,7 @@ async def init():
         pass
     await Istu.decorators()
     LOGGER("IQ_Paid").info(
-        "╔═════ஜ۩۞۩ஜ════╗\n  ☠︎︎ 𝗠𝗔𝗗𝗘 𝗕𝗬 𝗩𝗔𝗠𝗣𝗜𝗥𝗘 ☠︎︎\n╚═════ஜ۩۞۩ஜ════╝"
+        "╔═════ஜ۩۞۩ஜ════╗\n  ☠︎︎ 𝗠𝗔𝗗𝗘 𝗕𝗬 @l_Smoke_ll ☠︎︎\n╚═════ஜ۩۞۩ஜ════╝"
     )
     await idle()
     await app.stop()
