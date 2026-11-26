@@ -5,6 +5,7 @@ from IQ_Paid import app
 from IQ_Paid.button_styles import danger_button, primary_button, success_button
 import config
 from IQ_Paid.utils.formatters import time_to_seconds
+from IQ_Paid.utils.nowplaying import np_markup
 
 
 def track_markup(_, videoid, user_id, channel, fplay):
@@ -29,76 +30,12 @@ def track_markup(_, videoid, user_id, channel, fplay):
     return buttons
 
 
-def stream_markup_timer(_, chat_id, played, dur):
-    played_sec = time_to_seconds(played)
-    duration_sec = time_to_seconds(dur)
-    percentage = (played_sec / duration_sec) * 100 if duration_sec else 0
-    umm = math.floor(percentage)
-    if 0 < umm <= 10:
-        bar = "◉—————————"
-    elif 10 < umm < 20:
-        bar = "—◉————————"
-    elif 20 <= umm < 30:
-        bar = "——◉———————"
-    elif 30 <= umm < 40:
-        bar = "———◉——————"
-    elif 40 <= umm < 50:
-        bar = "————◉—————"
-    elif 50 <= umm < 60:
-        bar = "—————◉————"
-    elif 60 <= umm < 70:
-        bar = "——————◉———"
-    elif 70 <= umm < 80:
-        bar = "———————◉——"
-    elif 80 <= umm < 95:
-        bar = "————————◉—"
-    else:
-        bar = "—————————◉"
-    buttons = [
-        [
-            primary_button(
-                text=f"{played} {bar} {dur}",
-                callback_data="GetTimer",
-            )
-        ],
-        [
-            success_button(text="▷", callback_data=f"ADMIN Resume|{chat_id}"),
-            primary_button(text="II", callback_data=f"ADMIN Pause|{chat_id}"),
-            success_button(text="↻", callback_data=f"ADMIN Replay|{chat_id}"),
-            primary_button(text="‣‣I", callback_data=f"ADMIN Skip|{chat_id}"),
-            danger_button(text="▢", callback_data=f"ADMIN Stop|{chat_id}"),
-        ],
-        [
-            success_button(text="⪻ -20s", callback_data="seek_backward_20"),
-            primary_button(text="🎛 ᴇQ", callback_data=f"ADMIN Filters|{chat_id}"),
-            success_button(text="20s+ ⪼", callback_data="seek_forward_20"),
-        ],
-        [
-            danger_button(text=_["CLOSE_BUTTON"], callback_data="close"),
-        ],
-    ]
-    return buttons
+def stream_markup_timer(_, chat_id, played, dur, paused=False):
+    return np_markup(_, chat_id, played, dur, paused)
 
 
 def stream_markup(_, chat_id):
-    buttons = [
-        [
-            success_button(text="▷", callback_data=f"ADMIN Resume|{chat_id}"),
-            primary_button(text="II", callback_data=f"ADMIN Pause|{chat_id}"),
-            success_button(text="↻", callback_data=f"ADMIN Replay|{chat_id}"),
-            primary_button(text="‣‣I", callback_data=f"ADMIN Skip|{chat_id}"),
-            danger_button(text="▢", callback_data=f"ADMIN Stop|{chat_id}"),
-        ],
-        [
-            success_button(text="⪻ -20s", callback_data="seek_backward_20"),
-            primary_button(text="🎛 ᴇQ", callback_data=f"ADMIN Filters|{chat_id}"),
-            success_button(text="20s+ ⪼", callback_data="seek_forward_20"),
-        ],
-        [
-            danger_button(text=_["CLOSE_BUTTON"], callback_data="close"),
-        ],
-    ]
-    return buttons
+    return np_markup(_, chat_id)
 
 
 def playlist_markup(_, videoid, user_id, ptype, channel, fplay):

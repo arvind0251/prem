@@ -32,6 +32,7 @@ from IQ_Paid.utils.exceptions import AssistantErr
 from IQ_Paid.utils.formatters import check_duration, seconds_to_min, speed_converter
 from IQ_Paid.utils.inline.play import stream_markup
 from IQ_Paid.utils.thumbnails import get_thumb
+from IQ_Paid.utils.nowplaying import np_caption
 from strings import get_string
 
 autoend = {}
@@ -417,7 +418,7 @@ class Call:
             run = await app.send_photo(
                 chat_id=original_chat_id,
                 photo=img,
-                caption=_["stream_1"].format(
+                caption=np_caption(_, 
                     f"https://t.me/{app.username}?start=info_{videoid}",
                     title[:23],
                     check[0]["dur"],
@@ -477,7 +478,7 @@ class Call:
                 run = await app.send_photo(
                     chat_id=original_chat_id,
                     photo=config.TELEGRAM_AUDIO_URL if str(streamtype) == "audio" else config.TELEGRAM_VIDEO_URL,
-                    caption=_["stream_1"].format(
+                    caption=np_caption(_, 
                         config.SUPPORT_CHAT, title[:23], check[0]["dur"], user,
                         "🎥 Vɪᴅᴇᴏ" if video else "🎵 Aᴜᴅɪᴏ",
                     ),
@@ -490,7 +491,7 @@ class Call:
                 run = await app.send_photo(
                     chat_id=original_chat_id,
                     photo=config.SOUNCLOUD_IMG_URL,
-                    caption=_["stream_1"].format(
+                    caption=np_caption(_, 
                         config.SUPPORT_CHAT, title[:23], check[0]["dur"], user,
                         "🎥 Vɪᴅᴇᴏ" if video else "🎵 Aᴜᴅɪᴏ",
                     ),
@@ -504,7 +505,7 @@ class Call:
                 run = await app.send_photo(
                     chat_id=original_chat_id,
                     photo=img,
-                    caption=_["stream_1"].format(
+                    caption=np_caption(_, 
                         f"https://t.me/{app.username}?start=info_{videoid}",
                         title[:23],
                         check[0]["dur"],

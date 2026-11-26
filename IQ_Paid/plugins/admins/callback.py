@@ -31,6 +31,7 @@ from IQ_Paid.utils.formatters import seconds_to_min
 from IQ_Paid.utils.inline import close_markup, stream_markup, stream_markup_timer
 from IQ_Paid.utils.stream.autoclear import auto_clean
 from IQ_Paid.utils.thumbnails import get_thumb
+from IQ_Paid.utils.nowplaying import np_caption
 from config import (
     BANNED_USERS,
     SOUNCLOUD_IMG_URL,
@@ -64,6 +65,39 @@ async def unban_assistant(_, callback: CallbackQuery):
             "» ꜰᴀɪʟᴇᴅ ᴛᴏ ᴜɴʙᴀɴ ᴍʏ ᴀssɪsᴛᴀɴᴛ ʙᴇᴄᴀᴜsᴇ ɪ ᴅᴏɴ'ᴛ ʜᴀᴠᴇ ʙᴀɴ ᴘᴏᴡᴇʀ\n\n➻ ᴘʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴍᴇ ʙᴀɴ ᴘᴏᴡᴇʀ sᴏ ᴛʜᴀᴛ ɪ ᴄᴀɴ ᴜɴʙᴀɴ ᴍʏ ᴀssɪsᴛᴀɴᴛ ɪᴅ",
             show_alert=True
         )
+
+async def _np_refresh(CallbackQuery, chat_id, _, paused):
+    """Swap Pause <-> Resume on the now-playing message after a pause/resume."""
+    try:
+        playing = db.get(chat_id)
+        if not playing:
+            return
+        mystic = playing[0].get("mystic")
+        if not mystic or mystic.id != CallbackQuery.message.id:
+            return
+        buttons = stream_markup_timer(
+            _, chat_id, seconds_to_min(playing[0]["played"]), playing[0]["dur"], paused=paused
+        )
+        await CallbackQuery.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup(buttons))
+    except Exception:
+        pass
+
+
+@app.on_callback_query(filters.regex(r"^NPQueue") & ~BANNED_USERS)
+async def np_queue_popup(client, CallbackQuery):
+    try:
+        chat_id = int(CallbackQuery.data.split()[1])
+    except Exception:
+        return await CallbackQuery.answer()
+    got = db.get(chat_id)
+    if not got or len(got) < 2:
+        return await CallbackQuery.answer("Queue is empty.", show_alert=True)
+    lines = [f"{i}. {str(t.get('title', ''))[:26]}" for i, t in enumerate(got[1:6], 1)]
+    text = "\U0001f4dd Up next:\n" + "\n".join(lines)
+    if len(got) > 6:
+        text += f"\n+{len(got) - 6} more"
+    await CallbackQuery.answer(text[:200], show_alert=True)
+
 
 @app.on_callback_query(filters.regex("ADMIN") & ~BANNED_USERS)
 @languageCB
@@ -163,6 +197,7 @@ async def del_back_playlist(client, CallbackQuery, _):
         await CallbackQuery.answer()
         await music_off(chat_id)
         await Istu.pause_stream(chat_id)
+        await _np_refresh(CallbackQuery, chat_id, _, True)
         await CallbackQuery.message.reply_text(
             _["admin_2"].format(mention), reply_markup=close_markup(_)
         )
@@ -172,6 +207,7 @@ async def del_back_playlist(client, CallbackQuery, _):
         await CallbackQuery.answer()
         await music_on(chat_id)
         await Istu.resume_stream(chat_id)
+        await _np_refresh(CallbackQuery, chat_id, _, False)
         await CallbackQuery.message.reply_text(
             _["admin_4"].format(mention), reply_markup=close_markup(_)
         )
@@ -256,7 +292,7 @@ async def del_back_playlist(client, CallbackQuery, _):
             img = await get_thumb(videoid)
             run = await CallbackQuery.message.reply_photo(
                 photo=img,
-                caption=_["stream_1"].format(
+                caption=np_caption(_, 
                     f"https://t.me/{app.username}?start=info_{videoid}",
                     title[:23],
                     duration,
@@ -292,7 +328,7 @@ async def del_back_playlist(client, CallbackQuery, _):
             img = await get_thumb(videoid)
             run = await CallbackQuery.message.reply_photo(
                 photo=img,
-                caption=_["stream_1"].format(
+                caption=np_caption(_, 
                     f"https://t.me/{app.username}?start=info_{videoid}",
                     title[:23],
                     duration,
@@ -338,7 +374,7 @@ async def del_back_playlist(client, CallbackQuery, _):
                     photo=TELEGRAM_AUDIO_URL
                     if str(streamtype) == "audio"
                     else TELEGRAM_VIDEO_URL,
-                    caption=_["stream_1"].format(
+                    caption=np_caption(_, 
                         config.SUPPORT_CHAT, title[:23], duration, user
                     ),
                     reply_markup=InlineKeyboardMarkup(button),
@@ -351,7 +387,7 @@ async def del_back_playlist(client, CallbackQuery, _):
                     photo=SOUNCLOUD_IMG_URL
                     if str(streamtype) == "audio"
                     else TELEGRAM_VIDEO_URL,
-                    caption=_["stream_1"].format(
+                    caption=np_caption(_, 
                         config.SUPPORT_CHAT, title[:23], duration, user
                     ),
                     reply_markup=InlineKeyboardMarkup(button),
@@ -363,7 +399,7 @@ async def del_back_playlist(client, CallbackQuery, _):
                 img = await get_thumb(videoid)
                 run = await CallbackQuery.message.reply_photo(
                     photo=img,
-                    caption=_["stream_1"].format(
+                    caption=np_caption(_, 
                         f"https://t.me/{app.username}?start=info_{videoid}",
                         title[:23],
                         duration,

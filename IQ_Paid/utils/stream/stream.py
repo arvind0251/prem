@@ -13,6 +13,7 @@ from IQ_Paid.utils.inline import aq_markup, close_markup, stream_markup
 from IQ_Paid.utils.pastebin import IstuBin as SonaBin
 from IQ_Paid.utils.stream.queue import put_queue, put_queue_index
 from IQ_Paid.utils.thumbnails import get_thumb
+from IQ_Paid.utils.nowplaying import np_caption
 
 
 
@@ -72,7 +73,7 @@ async def stream(
                 run = await app.send_photo(
                     original_chat_id,
                     photo=img,
-                    caption=_["stream_1"].format(f"https://t.me/{app.username}?start=info_{vidid}", title[:23], duration_min, user_mention),
+                    caption=np_caption(_, f"https://t.me/{app.username}?start=info_{vidid}", title[:23], duration_min, user_mention),
                     reply_markup=InlineKeyboardMarkup(button),
                 )
                 db[chat_id][0]["mystic"] = run
@@ -126,7 +127,7 @@ async def stream(
             run = await app.send_photo(
                 original_chat_id,
                 photo=img,
-                caption=_["stream_1"].format(f"https://t.me/{app.username}?start=info_{vidid}", title[:23], duration_min, user_mention),
+                caption=np_caption(_, f"https://t.me/{app.username}?start=info_{vidid}", title[:23], duration_min, user_mention),
                 reply_markup=InlineKeyboardMarkup(button),
             )
             db[chat_id][0]["mystic"] = run
@@ -155,7 +156,7 @@ async def stream(
             run = await app.send_photo(
                 original_chat_id,
                 photo=config.SOUNCLOUD_IMG_URL,
-                caption=_["stream_1"].format(config.SUPPORT_CHAT, title[:23], duration_min, user_mention),
+                caption=np_caption(_, config.SUPPORT_CHAT, title[:23], duration_min, user_mention),
                 reply_markup=InlineKeyboardMarkup(button),
             )
             db[chat_id][0]["mystic"] = run
@@ -188,7 +189,7 @@ async def stream(
             run = await app.send_photo(
                 original_chat_id,
                 photo=config.TELEGRAM_VIDEO_URL if video else config.TELEGRAM_AUDIO_URL,
-                caption=_["stream_1"].format(link, title[:23], duration_min, user_mention),
+                caption=np_caption(_, link, title[:23], duration_min, user_mention),
                 reply_markup=InlineKeyboardMarkup(button),
             )
             db[chat_id][0]["mystic"] = run
@@ -224,7 +225,7 @@ async def stream(
             run = await app.send_photo(
                 original_chat_id,
                 photo=img,
-                caption=_["stream_1"].format(f"https://t.me/{app.username}?start=info_{vidid}", title[:23], duration_min, user_mention),
+                caption=np_caption(_, f"https://t.me/{app.username}?start=info_{vidid}", title[:23], duration_min, user_mention),
                 reply_markup=InlineKeyboardMarkup(button),
             )
             db[chat_id][0]["mystic"] = run

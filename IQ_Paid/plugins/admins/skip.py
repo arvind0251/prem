@@ -10,6 +10,7 @@ from IQ_Paid.utils.decorators import AdminRightsCheck
 from IQ_Paid.utils.inline import close_markup, stream_markup
 from IQ_Paid.utils.stream.autoclear import auto_clean
 from IQ_Paid.utils.thumbnails import get_thumb
+from IQ_Paid.utils.nowplaying import np_caption
 from config import BANNED_USERS
 
 
@@ -118,7 +119,7 @@ async def skip(cli, message: Message, _, chat_id):
         img = await get_thumb(videoid)
         run = await message.reply_photo(
             photo=img,
-            caption=_["stream_1"].format(
+            caption=np_caption(_, 
                 f"https://t.me/{app.username}?start=info_{videoid}",
                 title[:23],
                 check[0]["dur"],
@@ -151,7 +152,7 @@ async def skip(cli, message: Message, _, chat_id):
         img = await get_thumb(videoid)
         run = await message.reply_photo(
             photo=img,
-            caption=_["stream_1"].format(
+            caption=np_caption(_, 
                 f"https://t.me/{app.username}?start=info_{videoid}",
                 title[:23],
                 check[0]["dur"],
@@ -195,7 +196,7 @@ async def skip(cli, message: Message, _, chat_id):
                 photo=config.TELEGRAM_AUDIO_URL
                 if str(streamtype) == "audio"
                 else config.TELEGRAM_VIDEO_URL,
-                caption=_["stream_1"].format(
+                caption=np_caption(_, 
                     config.SUPPORT_CHAT, title[:23], check[0]["dur"], user
                 ),
                 reply_markup=InlineKeyboardMarkup(button),
@@ -208,7 +209,7 @@ async def skip(cli, message: Message, _, chat_id):
                 photo=config.SOUNCLOUD_IMG_URL
                 if str(streamtype) == "audio"
                 else config.TELEGRAM_VIDEO_URL,
-                caption=_["stream_1"].format(
+                caption=np_caption(_, 
                     config.SUPPORT_CHAT, title[:23], check[0]["dur"], user
                 ),
                 reply_markup=InlineKeyboardMarkup(button),
@@ -221,7 +222,7 @@ async def skip(cli, message: Message, _, chat_id):
             img = await get_thumb(videoid)
             run = await message.reply_photo(
                 photo=img,
-                caption=_["stream_1"].format(
+                caption=np_caption(_, 
                     f"https://t.me/{app.username}?start=info_{videoid}",
                     title[:23],
                     check[0]["dur"],
