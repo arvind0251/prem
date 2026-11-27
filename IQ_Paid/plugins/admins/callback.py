@@ -32,6 +32,7 @@ from IQ_Paid.utils.inline import close_markup, stream_markup, stream_markup_time
 from IQ_Paid.utils.stream.autoclear import auto_clean
 from IQ_Paid.utils.thumbnails import get_thumb
 from IQ_Paid.utils.nowplaying import np_caption
+from IQ_Paid.utils.richcard import RichCard, send_np_card
 from config import (
     BANNED_USERS,
     SOUNCLOUD_IMG_URL,
@@ -78,7 +79,11 @@ async def _np_refresh(CallbackQuery, chat_id, _, paused):
         buttons = stream_markup_timer(
             _, chat_id, seconds_to_min(playing[0]["played"]), playing[0]["dur"], paused=paused
         )
-        await CallbackQuery.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup(buttons))
+        markup = InlineKeyboardMarkup(buttons)
+        if isinstance(mystic, RichCard):
+            await mystic.edit_reply_markup(markup)
+        else:
+            await CallbackQuery.edit_message_reply_markup(reply_markup=markup)
     except Exception:
         pass
 
@@ -290,7 +295,7 @@ async def del_back_playlist(client, CallbackQuery, _):
                 return await CallbackQuery.message.reply_text(_["call_6"])
             button = stream_markup(_, chat_id)
             img = await get_thumb(videoid)
-            run = await CallbackQuery.message.reply_photo(
+            run = await send_np_card(app, chat_id=CallbackQuery.message.chat.id, reply_to=CallbackQuery.message, 
                 photo=img,
                 caption=np_caption(_, 
                     f"https://t.me/{app.username}?start=info_{videoid}",
@@ -326,7 +331,7 @@ async def del_back_playlist(client, CallbackQuery, _):
                 return await mystic.edit_text(_["call_6"])
             button = stream_markup(_, chat_id)
             img = await get_thumb(videoid)
-            run = await CallbackQuery.message.reply_photo(
+            run = await send_np_card(app, chat_id=CallbackQuery.message.chat.id, reply_to=CallbackQuery.message, 
                 photo=img,
                 caption=np_caption(_, 
                     f"https://t.me/{app.username}?start=info_{videoid}",
@@ -370,7 +375,7 @@ async def del_back_playlist(client, CallbackQuery, _):
                 return await CallbackQuery.message.reply_text(_["call_6"])
             if videoid == "telegram":
                 button = stream_markup(_, chat_id)
-                run = await CallbackQuery.message.reply_photo(
+                run = await send_np_card(app, chat_id=CallbackQuery.message.chat.id, reply_to=CallbackQuery.message, 
                     photo=TELEGRAM_AUDIO_URL
                     if str(streamtype) == "audio"
                     else TELEGRAM_VIDEO_URL,
@@ -383,7 +388,7 @@ async def del_back_playlist(client, CallbackQuery, _):
                 db[chat_id][0]["markup"] = "tg"
             elif videoid == "soundcloud":
                 button = stream_markup(_, chat_id)
-                run = await CallbackQuery.message.reply_photo(
+                run = await send_np_card(app, chat_id=CallbackQuery.message.chat.id, reply_to=CallbackQuery.message, 
                     photo=SOUNCLOUD_IMG_URL
                     if str(streamtype) == "audio"
                     else TELEGRAM_VIDEO_URL,
@@ -397,7 +402,7 @@ async def del_back_playlist(client, CallbackQuery, _):
             else:
                 button = stream_markup(_, chat_id)
                 img = await get_thumb(videoid)
-                run = await CallbackQuery.message.reply_photo(
+                run = await send_np_card(app, chat_id=CallbackQuery.message.chat.id, reply_to=CallbackQuery.message, 
                     photo=img,
                     caption=np_caption(_, 
                         f"https://t.me/{app.username}?start=info_{videoid}",

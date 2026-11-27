@@ -32,6 +32,7 @@ from IQ_Paid.utils.exceptions import AssistantErr
 from IQ_Paid.utils.formatters import check_duration, seconds_to_min, speed_converter
 from IQ_Paid.utils.inline.play import stream_markup
 from IQ_Paid.utils.thumbnails import get_thumb
+from IQ_Paid.utils.richcard import send_np_card
 from IQ_Paid.utils.nowplaying import np_caption
 from strings import get_string
 
@@ -415,7 +416,7 @@ class Call:
                 return await app.send_message(original_chat_id, text=_["call_6"])
             img = await get_thumb(videoid, user_id)
             button = stream_markup(_, chat_id)
-            run = await app.send_photo(
+            run = await send_np_card(app, 
                 chat_id=original_chat_id,
                 photo=img,
                 caption=np_caption(_, 
@@ -475,7 +476,7 @@ class Call:
                 return await app.send_message(original_chat_id, text=_["call_6"])
             if videoid == "telegram":
                 button = stream_markup(_, chat_id)
-                run = await app.send_photo(
+                run = await send_np_card(app, 
                     chat_id=original_chat_id,
                     photo=config.TELEGRAM_AUDIO_URL if str(streamtype) == "audio" else config.TELEGRAM_VIDEO_URL,
                     caption=np_caption(_, 
@@ -488,7 +489,7 @@ class Call:
                 db[chat_id][0]["markup"] = "tg"
             elif videoid == "soundcloud":
                 button = stream_markup(_, chat_id)
-                run = await app.send_photo(
+                run = await send_np_card(app, 
                     chat_id=original_chat_id,
                     photo=config.SOUNCLOUD_IMG_URL,
                     caption=np_caption(_, 
@@ -502,7 +503,7 @@ class Call:
             else:
                 img = await get_thumb(videoid, user_id)
                 button = stream_markup(_, chat_id)
-                run = await app.send_photo(
+                run = await send_np_card(app, 
                     chat_id=original_chat_id,
                     photo=img,
                     caption=np_caption(_, 

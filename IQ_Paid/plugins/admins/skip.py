@@ -11,6 +11,7 @@ from IQ_Paid.utils.inline import close_markup, stream_markup
 from IQ_Paid.utils.stream.autoclear import auto_clean
 from IQ_Paid.utils.thumbnails import get_thumb
 from IQ_Paid.utils.nowplaying import np_caption
+from IQ_Paid.utils.richcard import send_np_card
 from config import BANNED_USERS
 
 
@@ -117,7 +118,7 @@ async def skip(cli, message: Message, _, chat_id):
             return await message.reply_text(_["call_6"])
         button = stream_markup(_, chat_id)
         img = await get_thumb(videoid)
-        run = await message.reply_photo(
+        run = await send_np_card(app, chat_id=message.chat.id, reply_to=message, 
             photo=img,
             caption=np_caption(_, 
                 f"https://t.me/{app.username}?start=info_{videoid}",
@@ -150,7 +151,7 @@ async def skip(cli, message: Message, _, chat_id):
             return await mystic.edit_text(_["call_6"])
         button = stream_markup(_, chat_id)
         img = await get_thumb(videoid)
-        run = await message.reply_photo(
+        run = await send_np_card(app, chat_id=message.chat.id, reply_to=message, 
             photo=img,
             caption=np_caption(_, 
                 f"https://t.me/{app.username}?start=info_{videoid}",
@@ -192,7 +193,7 @@ async def skip(cli, message: Message, _, chat_id):
             return await message.reply_text(_["call_6"])
         if videoid == "telegram":
             button = stream_markup(_, chat_id)
-            run = await message.reply_photo(
+            run = await send_np_card(app, chat_id=message.chat.id, reply_to=message, 
                 photo=config.TELEGRAM_AUDIO_URL
                 if str(streamtype) == "audio"
                 else config.TELEGRAM_VIDEO_URL,
@@ -205,7 +206,7 @@ async def skip(cli, message: Message, _, chat_id):
             db[chat_id][0]["markup"] = "tg"
         elif videoid == "soundcloud":
             button = stream_markup(_, chat_id)
-            run = await message.reply_photo(
+            run = await send_np_card(app, chat_id=message.chat.id, reply_to=message, 
                 photo=config.SOUNCLOUD_IMG_URL
                 if str(streamtype) == "audio"
                 else config.TELEGRAM_VIDEO_URL,
@@ -220,7 +221,7 @@ async def skip(cli, message: Message, _, chat_id):
             button = stream_markup(_, chat_id)
             #button = stream_markup(_, chat_id, videoid)
             img = await get_thumb(videoid)
-            run = await message.reply_photo(
+            run = await send_np_card(app, chat_id=message.chat.id, reply_to=message, 
                 photo=img,
                 caption=np_caption(_, 
                     f"https://t.me/{app.username}?start=info_{videoid}",

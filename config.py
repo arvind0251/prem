@@ -35,6 +35,7 @@ ARTIST_API_KEY = getenv("ARTIST_API_KEY", "")
 TG_SONGS_STORAGE = getenv("TG_SONGS_STORAGE", "")
 TG_INDEX_CHANNEL = getenv("TG_INDEX_CHANNEL", "")
 MUST_JOIN = getenv("MUST_JOIN", "")
+RICH_CARD = getenv("RICH_CARD", "0").strip().lower() in ("1", "true", "yes", "on")
 # ======================================================
 DURATION_LIMIT_MIN = int(17000)
 SONG_DOWNLOAD_DURATION = int("9999999")

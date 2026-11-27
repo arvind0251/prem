@@ -13,6 +13,7 @@ from IQ_Paid.utils.inline import aq_markup, close_markup, stream_markup
 from IQ_Paid.utils.pastebin import IstuBin as SonaBin
 from IQ_Paid.utils.stream.queue import put_queue, put_queue_index
 from IQ_Paid.utils.thumbnails import get_thumb
+from IQ_Paid.utils.richcard import send_np_card
 from IQ_Paid.utils.nowplaying import np_caption
 
 
@@ -70,7 +71,7 @@ async def stream(
                 await put_queue(chat_id, original_chat_id, file_path if direct else f"vid_{vidid}", title, duration_min, user_mention, vidid, user_id, "video" if video else "audio", forceplay=forceplay)
                 img = await get_thumb(vidid)
                 button = stream_markup(_, chat_id)
-                run = await app.send_photo(
+                run = await send_np_card(app, 
                     original_chat_id,
                     photo=img,
                     caption=np_caption(_, f"https://t.me/{app.username}?start=info_{vidid}", title[:23], duration_min, user_mention),
@@ -124,7 +125,7 @@ async def stream(
             await put_queue(chat_id, original_chat_id, file_path if direct else f"vid_{vidid}", title, duration_min, user_mention, vidid, user_id, "video" if video else "audio", forceplay=forceplay)
             img = await get_thumb(vidid)
             button = stream_markup(_, chat_id)
-            run = await app.send_photo(
+            run = await send_np_card(app, 
                 original_chat_id,
                 photo=img,
                 caption=np_caption(_, f"https://t.me/{app.username}?start=info_{vidid}", title[:23], duration_min, user_mention),
@@ -153,7 +154,7 @@ async def stream(
             await Sona.join_call(chat_id, original_chat_id, file_path, video=None)
             await put_queue(chat_id, original_chat_id, file_path, title, duration_min, user_mention, streamtype, user_id, "audio", forceplay=forceplay)
             button = stream_markup(_, chat_id)
-            run = await app.send_photo(
+            run = await send_np_card(app, 
                 original_chat_id,
                 photo=config.SOUNCLOUD_IMG_URL,
                 caption=np_caption(_, config.SUPPORT_CHAT, title[:23], duration_min, user_mention),
@@ -186,7 +187,7 @@ async def stream(
             if video:
                 await add_active_video_chat(chat_id)
             button = stream_markup(_, chat_id)
-            run = await app.send_photo(
+            run = await send_np_card(app, 
                 original_chat_id,
                 photo=config.TELEGRAM_VIDEO_URL if video else config.TELEGRAM_AUDIO_URL,
                 caption=np_caption(_, link, title[:23], duration_min, user_mention),
@@ -222,7 +223,7 @@ async def stream(
             await put_queue(chat_id, original_chat_id, f"live_{vidid}", title, duration_min, user_mention, vidid, user_id, "video" if video else "audio", forceplay=forceplay)
             img = await get_thumb(vidid)
             button = stream_markup(_, chat_id)
-            run = await app.send_photo(
+            run = await send_np_card(app, 
                 original_chat_id,
                 photo=img,
                 caption=np_caption(_, f"https://t.me/{app.username}?start=info_{vidid}", title[:23], duration_min, user_mention),
