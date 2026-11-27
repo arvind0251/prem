@@ -6,7 +6,8 @@ import yt_dlp
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from IQ_Paid import app, userbot, LOGGER
-from IQ_Paid.utils.artistapi import get_fast_stream
+from IQ_Paid.utils.artistapi import artist_download_url, get_fast_stream
+from IQ_Paid.utils.songcache import cached_path, save_in_background
 from config import TG_SONGS_STORAGE, TG_INDEX_CHANNEL, YT_API_KEY2, YTPROXY_URL2 as YTPROXY2
 
 logger = LOGGER(__name__)
@@ -123,6 +124,13 @@ async def get_audio(video_id: str, cookie_file: str = None) -> str:
                 logger.info(f"Memory cache hit audio: {video_id}")
                 return fp
 
+        # 2a. Song saved on the VPS (songs/) - instant, no API call
+        saved = cached_path(video_id)
+        if saved:
+            logger.info(f"VPS saved song hit: {video_id}")
+            _memory_cache.setdefault(video_id, {})["audio"] = saved
+            return saved
+
         # 2. VPS file check
         filepath = os.path.join("downloads", f"{video_id}.mp3")
         if os.path.exists(filepath):
@@ -133,6 +141,7 @@ async def get_audio(video_id: str, cookie_file: str = None) -> str:
         # 3. Fast API race (BabiesIQ + ArtistBots in parallel) - no download, quickest
         fast_url = await get_fast_stream(video_id, "audio")
         if fast_url:
+            save_in_background(video_id, [artist_download_url(video_id), fast_url])  # keep a copy on the VPS
             return fast_url
 
         # 4. yt-dlp + cookies fallback (runs in a thread, bot does not freeze)

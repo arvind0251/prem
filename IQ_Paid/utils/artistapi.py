@@ -112,3 +112,11 @@ async def get_fast_stream(video_id: str, kind: str = "audio", timeout: float = 1
     if result:
         logger.info(f"Fast {kind} stream ready in {time.monotonic() - started:.1f}s: {video_id}")
     return result
+
+
+def artist_download_url(video_id: str):
+    """ArtistBots /download link (a real file, meant for saving). None if the API is not configured."""
+    if not (ARTIST_API_URL and ARTIST_API_KEY):
+        return None
+    params = {"url": video_id, "type": "audio", "api_key": ARTIST_API_KEY}
+    return f"{ARTIST_API_URL.rstrip('/')}/download?{urlencode(params)}"
