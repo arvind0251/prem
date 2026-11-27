@@ -9,12 +9,14 @@ installed Kurigram too. The object returned by send_np_card() mimics the parts o
 a pyrogram Message the bot uses (id, chat, edit_reply_markup, edit_text, delete).
 """
 
+import asyncio
 import html as _html
 import logging
 import re
 from types import SimpleNamespace
 
 import aiohttp
+from pyrogram.errors import FloodWait
 
 from config import BOT_TOKEN, RICH_CARD
 
@@ -28,6 +30,19 @@ _session = None
 
 class RichCardError(Exception):
     pass
+
+
+_CACHE_THUMB = re.compile(r"(?:^|/)cache/([A-Za-z0-9_-]{11})\.jpg$")
+
+
+def photo_url(photo):
+    """Rich cards need a URL. get_thumb() gives a local cache/<id>.jpg, so use the same YouTube thumbnail by URL."""
+    if not isinstance(photo, str):
+        return None
+    if photo.startswith(("http://", "https://")):
+        return photo
+    m = _CACHE_THUMB.search(photo.replace("\\", "/"))
+    return f"https://i.ytimg.com/vi/{m.group(1)}/hqdefault.jpg" if m else None
 
 
 def _button_html(btn):
@@ -68,7 +83,7 @@ def build_rich(photo, caption, markup):
     }
 
 
-async def _call(method, payload):
+async def _call(method, payload, _retry=True):
     global _session
     if _session is None or _session.closed:
         _session = aiohttp.ClientSession()
@@ -77,6 +92,10 @@ async def _call(method, payload):
     ) as resp:
         data = await resp.json(content_type=None)
     if not data.get("ok"):
+        wait = (data.get("parameters") or {}).get("retry_after")
+        if wait and _retry and wait <= 20:
+            await asyncio.sleep(wait + 0.5)
+            return await _call(method, payload, _retry=False)
         raise RichCardError(data.get("description", "unknown Bot API error"))
     return data.get("result")
 
@@ -128,15 +147,29 @@ class RichCard:
             return False
 
 
+async def _classic(client, chat_id, photo, caption, reply_markup, reply_to, kw):
+    async def go():
+        if reply_to is not None:  # same as before: reply to the user's message
+            return await reply_to.reply_photo(photo=photo, caption=caption, reply_markup=reply_markup, **kw)
+        return await client.send_photo(chat_id=chat_id, photo=photo, caption=caption, reply_markup=reply_markup, **kw)
+
+    try:
+        return await go()
+    except FloodWait as e:  # Telegram asked us to slow down: wait it out once instead of losing the card
+        if e.value <= 20:
+            await asyncio.sleep(e.value + 1)
+            return await go()
+        raise
+
+
 async def send_np_card(client, chat_id=None, photo=None, caption=None, reply_markup=None, reply_to=None, **kw):
-    """Drop-in for client.send_photo(...) used by the now-playing card."""
-    if RICH_ENABLED and reply_markup is not None and isinstance(photo, str) and photo.startswith(("http://", "https://")):
+    """Drop-in for send_photo/reply_photo used by the now-playing card."""
+    url = photo_url(photo)
+    if RICH_ENABLED and reply_markup is not None and url:
         try:
-            rich = build_rich(photo, caption, reply_markup)
+            rich = build_rich(url, caption, reply_markup)
             result = await _call("sendRichMessage", {"chat_id": chat_id, "rich_message": rich})
-            return RichCard(chat_id, result["message_id"], photo, caption, reply_markup, rich)
+            return RichCard(chat_id, result["message_id"], url, caption, reply_markup, rich)
         except Exception as e:
             log.error(f"Rich card failed, sending the normal card: {type(e).__name__}: {str(e)[:200]}")
-    if reply_to is not None:  # same as before: reply to the user's message
-        return await reply_to.reply_photo(photo=photo, caption=caption, reply_markup=reply_markup, **kw)
-    return await client.send_photo(chat_id=chat_id, photo=photo, caption=caption, reply_markup=reply_markup, **kw)
+    return await _classic(client, chat_id, photo, caption, reply_markup, reply_to, kw)
